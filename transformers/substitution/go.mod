@@ -1,4 +1,4 @@
-module github.com/buttahtoast/subst/transformers/substitution
+module github.com/buttahtoast/transformers/transformers/substitution
 
 go 1.19
 
