@@ -1,0 +1,11 @@
+apiVersion: transformers.buttahtoast.ch/v1
+kind: Substitution
+metadata:
+  name: notImportantHere
+  annotations:
+    config.kubernetes.io/function: |
+      container:
+        image: example.docker.com/my-functions/valueannotator:1.0.0      
+values:
+  cluster: "cluster-name"
+  cluster_id: "cluster-id"
