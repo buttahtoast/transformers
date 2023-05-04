@@ -6,7 +6,7 @@ gomod:
   proxy: true
 builds:
   - id: "substition"
-    main: transformers/substitution/main.go
+    main: main.go
     dir: transformers/substitution/
     binary: substitution
     env:
