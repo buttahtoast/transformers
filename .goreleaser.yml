@@ -1,0 +1,106 @@
+project_name: transformers
+env:
+  - COSIGN_EXPERIMENTAL=true
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod download
+gomod:
+  proxy: true
+builds:
+  - main: transformers/substitution/main.go
+    binary: substitution
+    env:
+      - CGO_ENABLED=0
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    goos:
+      - linux
+      - darwin
+    flags:
+      - -trimpath
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    ldflags:
+      - >-
+        -X github.com/buttahtoast/transformers/substitution/cmd.Version={{ .Tag }}
+        -X github.com/buttahtoast/transformers/substitution/cmd.GitCommit={{ .Commit }}
+        -X github.com/buttahtoast/transformers/substitution/cmd.BuildDate={{ .Date }}
+release:
+  footer: |
+    **Full Changelog**: https://github.com/buttahtoast/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
+    
+    * * *
+
+    **Docker Images**
+    - `ghcr.io/buttahtoast/{{ .ProjectName }}/substitution:{{ .Tag }}`
+
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+dockers:
+  - image_templates: [ "ghcr.io/buttahtoast/{{ .ProjectName }}/substitution:{{ .Tag }}" ]
+    dockerfile: Dockerfile
+    goos: linux
+    goarch: amd64
+    use: buildx
+    skip_push: false
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.description=kustomize transformer"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name=substitution"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=org.opencontainers.image.vendor=Buttahtoast"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+      - "--label=org.opencontainers.image.source=https://github.com/butthatoast/transformers/substitution"
+      - "--label=org.opencontainers.image.authors=Buttahtoast"
+      - "--label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/transformers/substitution/README.md"
+      - "--label=io.artifacthub.package.license=Apache-2.0"
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+    - '^test:'
+    - '^chore'
+    - 'merge conflict'
+    - Merge pull request
+    - Merge remote-tracking branch
+    - Merge branch
+  groups:
+    - title: Dependency updates
+      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'
+      order: 300
+    - title: 'New Features'
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 100
+    - title: 'Bug fixes'
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 200
+    - title: 'Documentation updates'
+      regexp: ^.*?doc(\([[:word:]]+\))??!?:.+$
+      order: 400
+    - title: 'Build process updates'
+      regexp: ^.*?build(\([[:word:]]+\))??!?:.+$
+      order: 400
+    - title: Other work
+      order: 9999
+signs:
+  - cmd: cosign
+    stdin: '{{ .Env.COSIGN_PWD }}'
+    args: ["sign-blob", "-key=cosign.key", "-output=${signature}", "${artifact}"]
+    artifacts: checksum
+docker_signs:
+- cmd: cosign
+  artifacts: manifests
+  output: true
+  stdin: '{{ .Env.COSIGN_PWD }}'
+  args:
+  - 'sign'
+  - '${artifact}@${digest}'
+  - --yes
