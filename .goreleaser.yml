@@ -88,17 +88,17 @@ changelog:
       order: 400
     - title: Other work
       order: 9999
-signs:
-  - cmd: cosign
-    stdin: '{{ .Env.COSIGN_PWD }}'
-    args: ["sign-blob", "--key=cosign.key", "--output-signature=${signature}", "${artifact}"]
-    artifacts: checksum
-docker_signs:
-- cmd: cosign
-  artifacts: manifests
-  output: true
-  stdin: '{{ .Env.COSIGN_PWD }}'
-  args:
-  - 'sign'
-  - '${artifact}@${digest}'
-  - --yes
+#signs:
+#  - cmd: cosign
+#    stdin: '{{ .Env.COSIGN_PWD }}'
+#    args: ["sign-blob", "--key=cosign.key", "--output-signature=${signature}", "${artifact}"]
+#    artifacts: checksum
+#docker_signs:
+#- cmd: cosign
+#  artifacts: manifests
+#  output: true
+#  stdin: '{{ .Env.COSIGN_PWD }}'
+#  args:
+#  - 'sign'
+#  - '${artifact}@${digest}'
+#  - --yes
