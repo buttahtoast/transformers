@@ -1,4 +1,3 @@
-# Kustomize Transformers/Generators
 
 __Early Development, You know what you are doing__.
 
@@ -7,6 +6,8 @@ Collection of transformers/generators for kustomize, which add functionality.
 All builds are focuesd to be used as [containerized KRM](https://kubectl.docs.kubernetes.io/guides/extending_kustomize/containerized_krm_functions/). The containers are based on scratch and should be as secure and minimalistic as possible.
 
 # Transformers
+
+Available [Kustomize Transformers](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/#everything-is-a-transformer) in this repository.
 
 ## Substition
 
