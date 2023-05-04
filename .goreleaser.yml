@@ -2,17 +2,21 @@ project_name: transformers
 env:
   - COSIGN_EXPERIMENTAL=true
   - GO111MODULE=on
+before:
+  hooks:
+    - go mod download
 gomod:
   proxy: true
 builds:
-  - main: transformers/substitution/main.go
+  - id: "substition"
+    main: transformers/substitution/main.go
+    dir: transformers/substitution/
     binary: substitution
     env:
       - CGO_ENABLED=0
     goarch:
       - amd64
       - arm64
-      - arm
     goos:
       - linux
       - darwin
