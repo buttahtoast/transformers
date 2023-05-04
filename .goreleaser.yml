@@ -40,7 +40,7 @@ snapshot:
   name_template: "{{ .Tag }}-next"
 dockers:
   - image_templates: [ "ghcr.io/buttahtoast/{{ .ProjectName }}/substitution:{{ .Tag }}" ]
-    dockerfile: Dockerfile
+    dockerfile: transformers/substitution/Dockerfile
     goos: linux
     goarch: amd64
     use: buildx
